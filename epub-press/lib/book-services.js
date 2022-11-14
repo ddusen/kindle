@@ -278,7 +278,7 @@ class BookServices {
     static convertToMobi(book) {
         return new Promise((resolve, reject) => {
             const kindlegenCommand = `${Config.KINDLEGEN} "${book.getEpubPath()}"`;
-            const calibreCommand = `calibre-bin/calibre/ebook-convert "${book.getEpubPath()}" "${book.getMobiPath()}" "--mobi-file-type=both" "--duplicate-links-in-toc"`;
+            const calibreCommand = `ebook-convert "${book.getEpubPath()}" "${book.getMobiPath()}" "--mobi-file-type=both" "--duplicate-links-in-toc"`;
             const conversionCommand = process.env.CONVERSION_BACKEND === 'calibre' ? calibreCommand : kindlegenCommand;
             exec(conversionCommand, (error) => {
                 if (error && error.code !== 0) {
