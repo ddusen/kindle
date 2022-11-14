@@ -1,0 +1,21 @@
+tmp/**
+!tmp/logs/.gitkeep
+!tmp/images/.gitkeep
+!tmp/covers/.gitkeep
+/public/system
+/coverage/
+.nyc_output/
+
+node_modules
+
+ebooks/**
+!ebooks/.gitkeep
+*.log
+hidden
+secrets/*.env
+envs/*.env
+.vscode/
+
+# local .env* files
+.env.local
+.env.*.local

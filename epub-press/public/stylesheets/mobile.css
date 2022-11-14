@@ -1,0 +1,21 @@
+#logo {
+    width: 25%;
+}
+
+#title {
+    font-size: 40px;
+}
+
+body {
+    margin: 20px 0px;
+}
+
+nav > a {
+    font-size: 12px;
+    padding: 8px 10px;
+    text-align: center;
+}
+
+#content {
+    width: 92%
+}

@@ -1,0 +1,49 @@
+{
+    "root": true,
+    "extends": "airbnb/base",
+    "rules": {
+        "indent": [
+            "error",
+            4
+        ],
+        "strict": 0,
+        "no-underscore-dangle": 0,
+        "no-mixed-operators": 0,
+        "no-plusplus": 0,
+        "implicit-arrow-linebreak": 0,
+        "import/no-extraneous-dependencies": [
+            "error",
+            {
+                "devDependencies": [
+                    "**/tests/**/*.js",
+                    "Gulpfile.js"
+                ]
+            }
+        ],
+        "comma-dangle": [
+            "error",
+            {
+                "arrays": "always-multiline",
+                "objects": "always-multiline",
+                "imports": "always-multiline",
+                "exports": "always-multiline",
+                "functions": "never"
+            }
+        ]
+    },
+    "env": {
+        "mocha": true,
+        "browser": true,
+        "jest": true,
+    },
+    "overrides": [
+        {
+            "files": ["scripts/**/*.js"],
+            "rules": {
+                "no-console": "off"
+            }
+        }
+    ]
+        
+    
+}
