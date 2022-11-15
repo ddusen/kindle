@@ -104,9 +104,6 @@ def main():
     # 循环书籍，获得书名与网址
     i = 0
     for book_key, book_name in book_dict.items():
-        if book_key != 'FoJiaoIndex':
-            continue
-
         print('Index: %d Book: %s' % (i, book_name, ))
         # 获取章节目录
         book_url = '{}/{}/{}.html'.format(BOOKS, author_key, book_key)
