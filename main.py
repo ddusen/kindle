@@ -6,7 +6,7 @@ EPUBPRESS = 'https://epub.press/api/v1/books'
 
 def get_html_text(url):
     time.sleep(3)
-    resp = requests.get(url)
+    resp = requests.get(url, timeout=600)
     resp.encoding = 'utf-8'
     return resp.text
 
@@ -34,7 +34,7 @@ def create_ebook(title, author, urls):
         "coverPath": "",
         "urls": urls
     }
-    resp = requests.post(url, headers=headers, data=json.dumps(data))
+    resp = requests.post(url, headers=headers, data=json.dumps(data), timeout=600)
     print('create_ebook url:{} resp.status_code:{} resp.text:{}'.format(
         url, resp.status_code, resp.text,
     ))
@@ -44,7 +44,7 @@ def check_created_ebook(book_id):
     time.sleep(3)
     url = '{}/{}/status'.format(EPUBPRESS, book_id)
     print('check_created_ebook url: %s' % url)
-    resp = requests.get(url)
+    resp = requests.get(url, timeout=600)
     if resp.json().get('progress') == 100:
         return True
     else:
