@@ -34,8 +34,8 @@ def create_ebook(title, author, urls):
     if resp.status_code == 202:
         return resp.json().get('id')
     else:
-        print('create_ebook url:{} data:{} resp.status_code:{} resp.text:{}'.format(
-            url, data, resp.status_code, resp.text,
+        print('create_ebook url:{} resp.status_code:{} resp.text:{}'.format(
+            url, resp.status_code, resp.text,
         ))
         return None
 
@@ -52,12 +52,39 @@ def check_created_ebook(book_id):
 def download_ebook(book_id, title, author):
     url = '{}/{}/download'.format(EPUBPRESS, book_id)
     resp = wget.download(url, '{}-{}.epub'.format(title, author))
-    print('download_ebook url:{} book_id:{}, title:{}, author:{}, resp.status_code:{}, resp.text:{}'.format( 
-        url, book_id, title, author, status_code, text,
+    print('download_ebook url:{} book_id:{}, title:{}, author:{}, resp:{}'.format( 
+        url, book_id, title, author, resp,
     ))
 
+def call_epub_press(book_name, book_author, chapter_urls):
+    # 调用 epub press api 创建书籍
+    book_id = create_ebook(book_name, book_author, chapter_urls)
+    # 验证书籍状态
+    time.sleep(3)
+    if check_created_ebook(book_id):
+        # 下载书籍
+        time.sleep(1)
+        download_ebook(book_id, book_name, book_author)
+    else:
+        # 休息一会
+        time.sleep(60)
+        if check_created_ebook(book_id):
+            # 下载书籍
+            time.sleep(1)
+            download_ebook(book_id, book_name, book_author)
+        else:
+            # 休息一会
+            time.sleep(60)
+            if check_created_ebook(book_id):
+                # 下载书籍
+                time.sleep(1)
+                download_ebook(book_id, book_name, book_author)
+            else:
+                print('download error. book_id:{} book_name:{} book_author'.format(book_id, book_name, book_author))
+
+
 def main():
-    author = '南怀瑾'
+    book_author = '南怀瑾'
     root_url = 'http://www.quanxue.cn/CT_NanHuaiJin'
     root_html_text = get_html_text('{}/index.html'.format(root_url))
     # 书籍列表
@@ -71,19 +98,19 @@ def main():
         chapter_html_text = get_html_text(book_url)
         chapter_urls = get_chapter_urls(root_url, chapter_html_text)
         
-        # 调用 epub press api 创建书籍
-        book_id = create_ebook(book_name, author, chapter_urls)
-        # 验证书籍状态
-        time.sleep(3)
-        if check_created_ebook(book_id):
-            # 下载书籍
-            time.sleep(1)
-            download_ebook(book_id, book_name, author)
+        '''
+        章节数量不能超过45。当超过时，对章节进行拆分
+        '''
+        if len(chapter_urls) > 45:
+            offset = 0
+            while offset < len(chapter_urls):
+                next_offset = offset+45
+                new_book_name = '{}（{}-{}）'.format(book_name, offset, next_offset)
+                call_epub_press(new_book_name, book_author, chapter_urls[offset:next_offset])
+                offset = next_offset
         else:
-            # 休息一会再下载
-            time.sleep(60)
-            download_ebook(book_id, book_name, author)
-
+            call_epub_press(book_name, book_author, chapter_urls)
+        
         time.sleep(1)
         i+=1
         break
