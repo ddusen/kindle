@@ -52,7 +52,7 @@ def check_created_ebook(book_id):
 def download_ebook(book_id, title, author):
     url = '{}/{}/download'.format(EPUBPRESS, book_id)
     resp = wget.download(url, '{}-{}.epub'.format(title, author))
-    print('download_ebook url:{} book_id:{}, title:{}, author:{}, resp:{}'.format( 
+    print('download_ebook url:{} book_id:{}, title:{}, author:{}\nresp:{}\n'.format( 
         url, book_id, title, author, resp,
     ))
 
@@ -105,7 +105,7 @@ def main():
             offset = 0
             while offset < len(chapter_urls):
                 next_offset = offset+45
-                new_book_name = '{}（{}-{}）'.format(book_name, offset, next_offset)
+                new_book_name = '{}.{}.{}'.format(book_name, offset, next_offset)
                 call_epub_press(new_book_name, book_author, chapter_urls[offset:next_offset])
                 offset = next_offset
         else:
