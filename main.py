@@ -111,10 +111,8 @@ def main():
         else:
             call_epub_press(book_name, book_author, chapter_urls)
         
-        time.sleep(1)
+        time.sleep(3)
         i+=1
-        break
-
 
 if __name__ == '__main__':
     main()
