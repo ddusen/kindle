@@ -51,13 +51,25 @@ def check_created_ebook(book_id):
         print(resp.status_code, resp.text)
         return False
 
-def download_ebook(book_id, title, author):
+def _download_ebook_epub(book_id, title, author):
     time.sleep(3)
     url = '{}/{}/download'.format(EPUBPRESS, book_id)
     resp = wget.download(url, '{}-{}.epub'.format(title, author))
-    print('download_ebook url:{} book_id:{}, title:{}, author:{}\nresp:{}\n'.format( 
+    print('_download_ebook_epub url:{} book_id:{}, title:{}, author:{}\nresp:{}\n'.format( 
         url, book_id, title, author, resp,
     ))
+
+def _download_ebook_mobi(book_id, title, author):
+    time.sleep(3)
+    url = '{}/{}/download?filetype=mobi'.format(EPUBPRESS, book_id)
+    resp = wget.download(url, '{}-{}.mobi'.format(title, author))
+    print('_download_ebook_mobi url:{} book_id:{}, title:{}, author:{}\nresp:{}\n'.format( 
+        url, book_id, title, author, resp,
+    ))
+
+def download_ebook(book_id, title, author):
+    _download_ebook_epub(book_id, title, author)
+    _download_ebook_mobi(book_id, title, author)
 
 def call_epub_press(book_name, book_author, chapter_urls):
     # 调用 epub press api 创建书籍
