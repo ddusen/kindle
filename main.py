@@ -16,7 +16,7 @@ def get_book_dict(html_text):
     return {r[0]:'{}{}'.format(r[1], r[2]) for r in results}
 
 def get_chapter_urls(author_key, book_key, html_text):
-    book_key = book_key.rstrip('Index')
+    book_key = book_key.replace('Index', '')
     expr = re.compile(r'<a href="{}/(.+?).html"'.format(book_key))
     results = expr.findall(html_text)
     urls = ['{}/{}/{}/{}.html'.format(BOOKS, author_key, book_key, r) for r in results]
