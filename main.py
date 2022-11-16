@@ -120,16 +120,18 @@ def main():
         book_url = '{}/{}/{}.html'.format(BOOKS, author_key, book_key)
         chapter_html_text = get_html_text(book_url)
         chapter_urls = get_chapter_urls(author_key, book_key, chapter_html_text)
-        chapter_urls_len = len(chapter_urls)
 
+        # 对章节目录进行处理
+        chapter_urls_len = len(chapter_urls)
+        chapter_max_len = 49
         if chapter_urls_len == 0: #章节为空，直接转换成书籍
             call_epub_press(book_name, author, [book_url])
-        elif chapter_urls_len <= 49: #章节小于等于49，直接转换成书籍
+        elif chapter_urls_len <= chapter_max_len: #章节小于等于49，直接转换成书籍
             call_epub_press(book_name, author, chapter_urls)
         else: #章节大于49，分批转换成书籍
             offset = 0
             while offset < chapter_urls_len:
-                next_offset = offset+49
+                next_offset = offset+chapter_max_len
                 new_book_name = '{}.{}.{}'.format(book_name, offset, next_offset)
                 call_epub_press(new_book_name, author, chapter_urls[offset:next_offset])
                 offset = next_offset
