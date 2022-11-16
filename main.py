@@ -1,8 +1,7 @@
 import re, requests, json, time, wget
 
+from meta import (BOOKS, EPUBPRESS, IPOINT, )
 
-BOOKS = 'http://www.quanxue.cn'
-EPUBPRESS = 'https://epub.press/api/v1/books'
 
 def get_html_text(url):
     time.sleep(3)
@@ -13,7 +12,8 @@ def get_html_text(url):
 def get_book_dict(html_text):
     expr = re.compile(r'<li class="index_left_td">..、<a href="(.+?).html" target="_blank">(.+?)</a>(.*?)</li>')
     results = expr.findall(html_text)
-    return {r[0]:'{}{}'.format(r[1], r[2]) for r in results}
+    f = lambda x: x.replace('（', '(').replace('）', ')')
+    return {r[0]:'{}{}'.format(r[1], f(r[2])) for r in results}
 
 def get_chapter_urls(author_key, book_key, html_text):
     book_key = book_key.replace('Index', '')
@@ -115,6 +115,10 @@ def main():
     i = 0
     for book_key, book_name in book_dict.items():
         print('Index: %d Book: %s' % (i, book_name, ))
+        # 断点续下
+        if i < IPOINT:
+            i += 1
+            continue
 
         # 获取章节目录
         book_url = '{}/{}/{}.html'.format(BOOKS, author_key, book_key)
