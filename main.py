@@ -136,7 +136,10 @@ def main():
             offset = 0
             while offset < chapter_urls_len:
                 next_offset = offset+chapter_max_len
-                new_book_name = '{}.{}.{}'.format(book_name, offset, next_offset)
+                new_book_name = '{}.{}.{}'.format(
+                    book_name, offset, 
+                    chapter_urls_len if next_offset > chapter_urls_len else next_offset
+                )
                 call_epub_press(new_book_name, author, chapter_urls[offset:next_offset])
                 offset = next_offset
         
