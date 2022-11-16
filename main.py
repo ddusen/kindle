@@ -11,7 +11,7 @@ def get_html_text(url):
     return resp.text
 
 def get_book_dict(html_text):
-    expr = re.compile(r'<li class="index_left_td">..、<a href="(.+?).html" target="_blank">(.+?)</a>(.*?)</li>')
+    expr = re.compile(r'class="index_left_td">.*?<a href="(.+?).html" target="_blank">(.+?)</a>(.*?)</')
     results = expr.findall(html_text)
     f = lambda x: x.replace('（', '(').replace('）', ')')
     return {r[0]:'{}{}'.format(r[1], f(r[2])) for r in results}

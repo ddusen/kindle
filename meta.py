@@ -6,5 +6,9 @@ EPUBPRESS = 'https://epub.press/api/v1/books'
 IPOINT = 0
 
 # 书籍信息
-AUTHOR = '南怀瑾'
-AUTHOR_KEY = 'ct_NanHuaijin'
+AUTHOR = '佛经'
+AUTHOR_KEY = 'CT_FoJia'
+# AUTHOR = '南怀瑾'
+# AUTHOR_KEY = 'ct_NanHuaijin'
+# AUTHOR = '中医'
+# AUTHOR_KEY = 'CT_ZhongYi'
