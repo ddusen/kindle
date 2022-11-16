@@ -1,6 +1,7 @@
 import re, requests, json, time, wget
 
-from meta import (BOOKS, EPUBPRESS, IPOINT, )
+from meta import (BOOKS, EPUBPRESS, IPOINT, 
+                AUTHOR, AUTHOR_KEY, )
 
 
 def get_html_text(url):
@@ -105,8 +106,8 @@ def call_epub_press(book_name, book_author, chapter_urls):
 
 
 def main():
-    author = '南怀瑾'
-    author_key = 'ct_NanHuaijin'
+    author = AUTHOR
+    author_key = AUTHOR_KEY
     root_html_text = get_html_text('{}/{}/index.html'.format(BOOKS, author_key))
     # 书籍列表
     book_dict = get_book_dict(root_html_text)
