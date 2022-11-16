@@ -17,9 +17,19 @@ def get_book_dict(html_text):
 
 def get_chapter_urls(author_key, book_key, html_text):
     book_key = book_key.replace('Index', '')
-    expr = re.compile(r'<a href="{}/(.+?).html"'.format(book_key))
+    expr = re.compile(r'<a href="{}/(.+?).html'.format(book_key))
     results = expr.findall(html_text)
-    urls = ['{}/{}/{}/{}.html'.format(BOOKS, author_key, book_key, r) for r in results]
+
+    urls = []
+    exists = dict()
+    for r in results:
+        if r in exists:
+            continue
+
+        exists[r] = True
+        url = '{}/{}/{}/{}.html'.format(BOOKS, author_key, book_key, r)
+        urls.append(url)
+    
     return urls
 
 def create_ebook(title, author, urls):
@@ -105,30 +115,24 @@ def main():
     i = 0
     for book_key, book_name in book_dict.items():
         print('Index: %d Book: %s' % (i, book_name, ))
+
         # 获取章节目录
         book_url = '{}/{}/{}.html'.format(BOOKS, author_key, book_key)
         chapter_html_text = get_html_text(book_url)
         chapter_urls = get_chapter_urls(author_key, book_key, chapter_html_text)
         chapter_urls_len = len(chapter_urls)
-        
-        '''
-        章节为空，直接转换成书籍
-        '''
-        if chapter_urls_len == 0:
-            call_epub_press(book_name, author, book_url)
 
-        '''
-        章节数量不能超过45。当超过时，对章节进行拆分
-        '''
-        if chapter_urls_len > 45:
+        if chapter_urls_len == 0: #章节为空，直接转换成书籍
+            call_epub_press(book_name, author, [book_url])
+        elif chapter_urls_len <= 49: #章节小于等于49，直接转换成书籍
+            call_epub_press(book_name, author, chapter_urls)
+        else: #章节大于49，分批转换成书籍
             offset = 0
             while offset < chapter_urls_len:
-                next_offset = offset+45
+                next_offset = offset+49
                 new_book_name = '{}.{}.{}'.format(book_name, offset, next_offset)
                 call_epub_press(new_book_name, author, chapter_urls[offset:next_offset])
                 offset = next_offset
-        else:
-            call_epub_press(book_name, author, chapter_urls)
         
         i+=1
 
