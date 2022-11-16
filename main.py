@@ -109,13 +109,20 @@ def main():
         book_url = '{}/{}/{}.html'.format(BOOKS, author_key, book_key)
         chapter_html_text = get_html_text(book_url)
         chapter_urls = get_chapter_urls(author_key, book_key, chapter_html_text)
+        chapter_urls_len = len(chapter_urls)
+        
+        '''
+        章节为空，直接转换成书籍
+        '''
+        if chapter_urls_len == 0:
+            call_epub_press(book_name, author, book_url)
 
         '''
         章节数量不能超过45。当超过时，对章节进行拆分
         '''
-        if len(chapter_urls) > 45:
+        if chapter_urls_len > 45:
             offset = 0
-            while offset < len(chapter_urls):
+            while offset < chapter_urls_len:
                 next_offset = offset+45
                 new_book_name = '{}.{}.{}'.format(book_name, offset, next_offset)
                 call_epub_press(new_book_name, author, chapter_urls[offset:next_offset])
