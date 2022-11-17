@@ -79,8 +79,14 @@ def _download_ebook_mobi(book_id, title, author):
     ))
 
 def download_ebook(book_id, title, author):
-    _download_ebook_epub(book_id, title, author)
-    _download_ebook_mobi(book_id, title, author)
+    try:
+        _download_ebook_epub(book_id, title, author)
+        _download_ebook_mobi(book_id, title, author)
+    except:
+        time.sleep(60)
+        _download_ebook_epub(book_id, title, author)
+        _download_ebook_mobi(book_id, title, author)
+
 
 def call_epub_press(book_name, book_author, chapter_urls):
     # 调用 epub press api 创建书籍
